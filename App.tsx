@@ -1,22 +1,27 @@
-import React from 'react';
-import {
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
+import GoalInput from './src/components/GoalInput';
+import GoalItem from './src/components/GoalItem';
 
 function App(): JSX.Element {
+  const [goals, setGoals] = useState([]);
+
+  const addGoalHandler = input => {
+    setGoals(currentGoal => [
+      ...currentGoal,
+      {text: input.toUpperCase(), id: Math.random().toString()},
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="Enter your goal" />
-        <Button title="PRRSS ME" />
-      </View>
+      <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.listContainer}>
-        <Text style={styles.listTitle}>List of goals...</Text>
+        <FlatList
+          data={goals}
+          renderItem={item => <GoalItem text={item.item.text} />}
+          keyExtractor={(item, index) => item.id}
+        />
       </View>
     </SafeAreaView>
   );
@@ -28,27 +33,9 @@ const styles = StyleSheet.create({
     marginTop: 17,
     marginHorizontal: 10,
   },
-  inputContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: '#FFFFFF',
-  },
-  input: {
-    width: '70%',
-    borderWidth: 1,
-    borderColor: '#FFFFFF',
-  },
   listContainer: {
     flex: 4,
     paddingTop: 10,
-  },
-  listTitle: {
-    fontSize: 20,
-    color: '#FFFFFFFF',
-    fontWeight: '600',
   },
 });
 
