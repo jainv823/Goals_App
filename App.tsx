@@ -13,13 +13,27 @@ function App(): JSX.Element {
     ]);
   };
 
+  const removeGoalHandler = id => {
+    setGoals(currentGoal => {
+      return currentGoal.filter(goal => goal.id !== id);
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.listContainer}>
         <FlatList
           data={goals}
-          renderItem={item => <GoalItem text={item.item.text} />}
+          renderItem={({item}) => {
+            return (
+              <GoalItem
+                text={item.text}
+                id={item.id}
+                onRemoveGoal={removeGoalHandler}
+              />
+            );
+          }}
           keyExtractor={(item, index) => item.id}
         />
       </View>
